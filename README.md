@@ -1,3 +1,2 @@
 # cantina
-
-encomendas da cantina.
+Projecto de cantina
