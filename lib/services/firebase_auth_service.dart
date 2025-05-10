@@ -32,6 +32,7 @@ class FirebaseAuthService {
         email: email,
         password: password,
       );
+      print('FirebaseAuthService: Sign in successful for user: ${credential.user?.email}');
       return credential.user;
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {

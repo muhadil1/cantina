@@ -20,6 +20,7 @@ class LoginViewModel with ChangeNotifier {
 
     try {
       await _authRepository.signInWithEmailAndPassword(email, password);
+      print('LoginViewModel: signIn successful.');
       _isLoading = false;
       notifyListeners(); // Notifica sucesso
       return true; // Login bem-sucedido
@@ -30,6 +31,8 @@ class LoginViewModel with ChangeNotifier {
       notifyListeners(); // Notifica a View que o estado de loading e erro mudaram
       return false; // Login falhou
     }
+
+
   }
 
 // Você pode adicionar um método semelhante para sign up aqui ou em um ViewModel separado

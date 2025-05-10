@@ -31,9 +31,22 @@ class MenuItem {
     );
   }
 
-  // Método para converter MenuItem para um Map (útil para salvar no Firestore)
+  factory MenuItem.fromMap(Map<String, dynamic> map) {
+    // Assume que o map contém os campos necessários, incluindo 'id'
+    return MenuItem(
+      id: map['id'] ?? '', // Obter o ID do map
+      name: map['name'] ?? '',
+      description: map['description'] ?? '',
+      price: (map['price'] ?? 0.0).toDouble(),
+      category: map['category'] ?? '',
+      imageUrl: map['imageUrl'] ?? '',
+    );
+  }
+
+  // Método para converter MenuItem para um Map (Modificar para incluir o id)
   Map<String, dynamic> toMap() {
     return {
+      'id': id, // <<< Incluir o ID ao converter para map
       'name': name,
       'description': description,
       'price': price,

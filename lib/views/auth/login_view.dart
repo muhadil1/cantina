@@ -56,6 +56,7 @@ class _LoginViewState extends State<LoginView> {
                     // Navegar para a próxima tela (ex: HomeView)
                     print('Login Successful!');
                     // TODO: Implementar navegação
+
                   } else {
                     // Mostrar mensagem de erro (ex: usando um SnackBar)
                     print('Login Failed: ${loginViewModel.errorMessage}');

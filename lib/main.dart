@@ -4,13 +4,15 @@ import 'package:provider/provider.dart';
 
 import 'firebase_options.dart';
 import 'services/firebase_auth_service.dart';
-import 'services/firestore_service.dart'; // Importar o FirestoreService
+import 'services/firestore_service.dart';
 import 'repositories/auth_repository.dart';
-import 'repositories/menu_repository.dart'; // Importar o MenuRepository
+import 'repositories/menu_repository.dart';
+import 'repositories/order_repository.dart'; // Importar o OrderRepository
 import 'viewmodels/auth/login_viewmodel.dart';
 import 'viewmodels/auth/signup_viewmodel.dart';
-import 'viewmodels/menu/cantina_menu_viewmodel.dart'; // Importar CanteenMenuViewModel
-import 'viewmodels/menu/externo_menu_viewmodel.dart'; // Importar ExternalMenuViewModel
+import 'viewmodels/menu/cantina_menu_viewmodel.dart';
+import 'viewmodels/menu/externo_menu_viewmodel.dart';
+import 'viewmodels/order/cart_viewmodel.dart'; // Importar CartViewModel
 import 'widgets/auth_wrapper.dart';
 
 
@@ -31,7 +33,7 @@ class MyApp extends StatelessWidget {
         Provider<FirebaseAuthService>(
           create: (_) => FirebaseAuthService(),
         ),
-        Provider<FirestoreService>( // Fornece o FirestoreService
+        Provider<FirestoreService>(
           create: (_) => FirestoreService(),
         ),
 
@@ -41,8 +43,13 @@ class MyApp extends StatelessWidget {
             Provider.of<FirebaseAuthService>(context, listen: false),
           ),
         ),
-        Provider<MenuRepository>( // Fornece o MenuRepository
+        Provider<MenuRepository>(
           create: (context) => MenuRepository(
+            Provider.of<FirestoreService>(context, listen: false),
+          ),
+        ),
+        Provider<OrderRepository>( // Fornece o OrderRepository
+          create: (context) => OrderRepository(
             Provider.of<FirestoreService>(context, listen: false), // Injete o FirestoreService
           ),
         ),
@@ -60,14 +67,21 @@ class MyApp extends StatelessWidget {
         ),
 
         // ViewModels de Cardápio
-        ChangeNotifierProvider<CanteenMenuViewModel>( // Fornece CanteenMenuViewModel
+        ChangeNotifierProvider<CanteenMenuViewModel>(
           create: (context) => CanteenMenuViewModel(
-            Provider.of<MenuRepository>(context, listen: false), // Injete o MenuRepository
+            Provider.of<MenuRepository>(context, listen: false),
           ),
         ),
-        ChangeNotifierProvider<ExternalMenuViewModel>( // Fornece ExternalMenuViewModel
+        ChangeNotifierProvider<ExternalMenuViewModel>(
           create: (context) => ExternalMenuViewModel(
-            Provider.of<MenuRepository>(context, listen: false), // Injete o MenuRepository
+            Provider.of<MenuRepository>(context, listen: false),
+          ),
+        ),
+
+        // ViewModel do Carrinho
+        ChangeNotifierProvider<CartViewModel>( // Fornece CartViewModel
+          create: (context) => CartViewModel(
+            Provider.of<OrderRepository>(context, listen: false), // Injete o OrderRepository
           ),
         ),
 

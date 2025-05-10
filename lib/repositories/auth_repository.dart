@@ -23,7 +23,7 @@ class AuthRepository {
   Future<AppUser?> signInWithEmailAndPassword(String email, String password) async {
     try {
       User? firebaseUser = await _firebaseAuthService.signInWithEmailAndPassword(email, password);
-      return AppUser.fromFirebaseUser(firebaseUser);
+      AppUser? appUser = AppUser.fromFirebaseUser(firebaseUser);
     } catch (e) {
       // Tratar ou relançar exceções de forma mais genérica se necessário
       print('Error during sign in: $e');
