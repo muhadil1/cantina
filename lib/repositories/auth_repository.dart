@@ -46,6 +46,11 @@ class AuthRepository {
   // Stream para observar o estado de autenticação, mapeando para AppUser
   Stream<AppUser?> get user {
     return _firebaseAuthService.authStateChanges.map((firebaseUser) {
+      // >>> MUDANÇA AQUI <<<
+      if (firebaseUser == null) {
+        return null; // Se o utilizador do Firebase for null, emitir null no nosso stream
+      }
+      // Caso contrário, mapear para o nosso AppUser
       return AppUser.fromFirebaseUser(firebaseUser);
     });
   }

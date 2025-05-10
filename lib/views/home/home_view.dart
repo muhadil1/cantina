@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../repositories/auth_repository.dart';
@@ -23,9 +24,21 @@ class HomeView extends StatelessWidget {
             SizedBox(height: 20),
             ElevatedButton(
               onPressed: () async {
-                print('HomeView: Logout button pressed.');
-                await authRepository.signOut();
-                print('HomeView: authRepository.signOut() called.');
+                print('->> Logout button was tapped!');
+                try {
+                  print('HomeView: Getting AuthRepository...');
+                  final authRepository = Provider.of<AuthRepository>(context, listen: false);
+                  print('HomeView: AuthRepository obtained. Attempting sign out...');
+                  await authRepository.signOut();
+                  print('HomeView: authRepository.signOut() completed.');
+
+                  final currentUserAfterSignOut = FirebaseAuth.instance.currentUser;
+                  print('HomeView: FirebaseAuth.instance.currentUser after sign out: $currentUserAfterSignOut');
+
+                } catch (e) {
+                  print('HomeView: Error caught during sign out: $e');
+                }
+                print('->> End of Logout button onPressed <<-');
               },
               child: Text('Logout'),
             ),
