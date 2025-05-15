@@ -15,6 +15,7 @@ class HomeView extends StatelessWidget {
 
     return Consumer<CartViewModel>( // <<< Envolva com Consumer
       builder: (context, cartViewModel, child) { // <<< builder function
+        
         return Scaffold(
           appBar: AppBar(
             title: Text('Bem-vindo!'),

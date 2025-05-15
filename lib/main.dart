@@ -1,3 +1,5 @@
+import 'package:cantina/services/notification_service.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
@@ -21,6 +23,15 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  FirebaseMessaging messaging = FirebaseMessaging.instance;
+
+  NotificationSettings settings = await messaging.requestPermission(
+    alert: true,
+    badge: true,
+    sound: true,
+  );
+  await NotificationService.initialize();
+  NotificationService.setupFirebaseMessagingListeners();
   runApp(MyApp());
 }
 
@@ -41,6 +52,7 @@ class MyApp extends StatelessWidget {
         Provider<AuthRepository>(
           create: (context) => AuthRepository(
             Provider.of<FirebaseAuthService>(context, listen: false),
+            Provider.of<FirestoreService>(context, listen: false), // Injete o FirestoreService
           ),
         ),
         Provider<MenuRepository>(

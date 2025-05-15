@@ -1,11 +1,15 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import '../models/user.dart';
 import '../services/firebase_auth_service.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import '../services/firestore_service.dart';
 
 class AuthRepository {
   final FirebaseAuthService _firebaseAuthService;
+  final FirestoreService _firestoreService; // Injetar FirestoreService
+  final String _usersCollection = 'users'; // Nome da coleção de utilizadores
 
-  AuthRepository(this._firebaseAuthService);
+  AuthRepository(this._firebaseAuthService, this._firestoreService);
 
   // Método para registar utilizador
   Future<AppUser?> signUpWithEmailAndPassword(String email, String password) async {
@@ -17,6 +21,43 @@ class AuthRepository {
       print('Error during sign up: $e');
       rethrow;
     }
+  }
+
+  // Método para obter o token FCM e salvá-lo no documento do utilizador
+  Future<void> updateUserFCMToken(String userId) async {
+    try {
+      // Obter o token FCM do dispositivo
+      String? fcmToken = await FirebaseMessaging.instance.getToken();
+
+      if (fcmToken != null) {
+        print('AuthRepository: Updating FCM token for user $userId: $fcmToken');
+        // Atualizar o documento do utilizador na coleção 'users' com o token
+        await _firestoreService.updateDocument(
+          _usersCollection,
+          userId,
+          {'fcmToken': fcmToken},
+        );
+        print('AuthRepository: FCM token updated successfully.');
+      } else {
+        print('AuthRepository: FCM token is null, cannot update.');
+      }
+    } catch (e) {
+      print('AuthRepository: Error updating FCM token: $e');
+      // Pode decidir não relançar este erro se a atualização do token não for crítica para o login
+      // rethrow;
+    }
+  }
+
+  // Método para lidar com a atualização do token FCM (se ele mudar)
+  void listenToFCMTokenChanges() {
+    FirebaseMessaging.instance.onTokenRefresh.listen((newToken) async {
+      print('AuthRepository: FCM Token refreshed: $newToken');
+      // Quando o token refrescar, obter o utilizador atual e atualizar no Firestore
+      User? currentUser = FirebaseAuth.instance.currentUser;
+      if (currentUser != null) {
+        await updateUserFCMToken(currentUser.uid);
+      }
+    });
   }
 
   // Método para fazer login
