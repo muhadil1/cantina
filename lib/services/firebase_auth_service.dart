@@ -4,12 +4,13 @@ class FirebaseAuthService {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
   // Método para registar utilizador com email e password
-  Future<User?> signUpWithEmailAndPassword(String email, String password) async {
+  Future<User?> signUpWithEmailAndPassword(
+    String email,
+    String password,
+  ) async {
     try {
-      UserCredential credential = await _firebaseAuth.createUserWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
+      UserCredential credential = await _firebaseAuth
+          .createUserWithEmailAndPassword(email: email, password: password);
       return credential.user;
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
@@ -26,13 +27,16 @@ class FirebaseAuthService {
   }
 
   // Método para fazer login com email e password
-  Future<User?> signInWithEmailAndPassword(String email, String password) async {
+  Future<User?> signInWithEmailAndPassword(
+    String email,
+    String password,
+  ) async {
     try {
-      UserCredential credential = await _firebaseAuth.signInWithEmailAndPassword(
-        email: email,
-        password: password,
+      UserCredential credential = await _firebaseAuth
+          .signInWithEmailAndPassword(email: email, password: password);
+      print(
+        'FirebaseAuthService: Sign in successful for user: ${credential.user?.email}',
       );
-      print('FirebaseAuthService: Sign in successful for user: ${credential.user?.email}');
       return credential.user;
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {

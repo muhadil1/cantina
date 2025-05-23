@@ -9,12 +9,15 @@ class MenuRepository {
 
   // Coleções no Firestore (assumindo que você terá coleções separadas ou uma com um campo 'source')
   final String _canteenMenuCollection = 'canteen_menu';
-  final String _externalMenuCollection = 'external_menus'; // Exemplo: pode ser uma coleção de estabelecimentos
+  final String _externalMenuCollection =
+      'external_menus'; // Exemplo: pode ser uma coleção de estabelecimentos
 
   // Método para obter o cardápio da cantina
   Future<List<MenuItem>> getCanteenMenu() async {
     try {
-      QuerySnapshot snapshot = await _firestoreService.getCollection(_canteenMenuCollection);
+      QuerySnapshot snapshot = await _firestoreService.getCollection(
+        _canteenMenuCollection,
+      );
       return snapshot.docs.map((doc) => MenuItem.fromFirestore(doc)).toList();
     } catch (e) {
       print('Error fetching canteen menu: $e');
@@ -27,7 +30,9 @@ class MenuRepository {
   // Em uma implementação real, você pode querer filtrar por estabelecimento.
   Future<List<MenuItem>> getExternalMenus() async {
     try {
-      QuerySnapshot snapshot = await _firestoreService.getCollection(_externalMenuCollection);
+      QuerySnapshot snapshot = await _firestoreService.getCollection(
+        _externalMenuCollection,
+      );
       return snapshot.docs.map((doc) => MenuItem.fromFirestore(doc)).toList();
     } catch (e) {
       print('Error fetching external menus: $e');
@@ -35,5 +40,5 @@ class MenuRepository {
     }
   }
 
-// Você pode adicionar métodos para obter menus de um estabelecimento específico, etc.
+  // Você pode adicionar métodos para obter menus de um estabelecimento específico, etc.
 }

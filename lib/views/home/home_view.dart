@@ -6,22 +6,24 @@ import '../menu/cantina_menu_view.dart';
 import '../menu/externo_menu_view.dart';
 import '../order/cart_view.dart'; // <<< Importar a View do Carrinho
 
-
 class HomeView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     print('HomeView: Build method called.');
     final authRepository = Provider.of<AuthRepository>(context, listen: false);
 
-    return Consumer<CartViewModel>( // <<< Envolva com Consumer
-      builder: (context, cartViewModel, child) { // <<< builder function
-        
+    return Consumer<CartViewModel>(
+      // <<< Envolva com Consumer
+      builder: (context, cartViewModel, child) {
+        // <<< builder function
+
         return Scaffold(
           appBar: AppBar(
             title: Text('Bem-vindo!'),
             actions: [
               // Ícone do Carrinho com Contador
-              Stack( // Use Stack para posicionar o número sobre o ícone
+              Stack(
+                // Use Stack para posicionar o número sobre o ícone
                 children: [
                   IconButton(
                     icon: Icon(Icons.shopping_cart),
@@ -32,7 +34,9 @@ class HomeView extends StatelessWidget {
                       );
                     },
                   ),
-                  if (cartViewModel.items.isNotEmpty) // Mostra o contador apenas se houver itens
+                  if (cartViewModel
+                      .items
+                      .isNotEmpty) // Mostra o contador apenas se houver itens
                     Positioned(
                       right: 0,
                       top: 0,
@@ -48,10 +52,7 @@ class HomeView extends StatelessWidget {
                         ),
                         child: Text(
                           '${cartViewModel.items.length}', // Mostra o número de itens
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 10,
-                          ),
+                          style: TextStyle(color: Colors.white, fontSize: 10),
                           textAlign: TextAlign.center,
                         ),
                       ),
@@ -71,16 +72,15 @@ class HomeView extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(
-                  'Conteúdo principal aqui',
-                  style: TextStyle(fontSize: 20),
-                ),
+                Text('Conteúdo principal aqui', style: TextStyle(fontSize: 20)),
                 SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => CanteenMenuView()),
+                      MaterialPageRoute(
+                        builder: (context) => CanteenMenuView(),
+                      ),
                     );
                   },
                   child: Text('Ver Cardápio da Cantina'),
@@ -90,7 +90,9 @@ class HomeView extends StatelessWidget {
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => ExternalMenuView()),
+                      MaterialPageRoute(
+                        builder: (context) => ExternalMenuView(),
+                      ),
                     );
                   },
                   child: Text('Ver Cardápios Externos'),

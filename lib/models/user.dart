@@ -8,11 +8,8 @@ class AppUser {
 
   // Factory method para criar um AppUser a partir de um objeto User do Firebase
   factory AppUser.fromFirebaseUser(User? firebaseUser) {
-    return AppUser(
-      uid: firebaseUser?.uid,
-      email: firebaseUser?.email,
-    );
+    return AppUser(uid: firebaseUser?.uid, email: firebaseUser?.email);
   }
 
-// Adicione outros campos relevantes do utilizador conforme necessário
+  // Adicione outros campos relevantes do utilizador conforme necessário
 }

@@ -53,33 +53,38 @@ class _AuthWrapperState extends State<AuthWrapper> {
     return StreamBuilder<AppUser?>(
       stream: authUserStream,
       builder: (context, snapshot) {
-        print('AuthWrapperState: StreamBuilder - Connection State: ${snapshot.connectionState}');
-        print('AuthWrapperState: StreamBuilder - Data (User): ${snapshot.data}');
+        print(
+          'AuthWrapperState: StreamBuilder - Connection State: ${snapshot.connectionState}',
+        );
+        print(
+          'AuthWrapperState: StreamBuilder - Data (User): ${snapshot.data}',
+        );
 
         if (snapshot.connectionState == ConnectionState.waiting) {
-          print('AuthWrapperState: StreamBuilder - Connection State is waiting, showing loading.');
-          return Scaffold(
-            body: Center(
-              child: CircularProgressIndicator(),
-            ),
+          print(
+            'AuthWrapperState: StreamBuilder - Connection State is waiting, showing loading.',
           );
+          return Scaffold(body: Center(child: CircularProgressIndicator()));
         } else if (snapshot.hasError) {
-          print('AuthWrapperState: StreamBuilder - Has error: ${snapshot.error}');
+          print(
+            'AuthWrapperState: StreamBuilder - Has error: ${snapshot.error}',
+          );
           // Opcional: Mostrar tela de erro
           return Scaffold(
-            body: Center(
-              child: Text('Ocorreu um erro: ${snapshot.error}'),
-            ),
+            body: Center(child: Text('Ocorreu um erro: ${snapshot.error}')),
           );
-        }
-        else {
+        } else {
           final AppUser? user = snapshot.data;
 
           if (user == null) {
-            print('AuthWrapperState: StreamBuilder - User is null, showing LoginView.');
+            print(
+              'AuthWrapperState: StreamBuilder - User is null, showing LoginView.',
+            );
             return LoginView();
           } else {
-            print('AuthWrapperState: StreamBuilder - User is not null (${user.uid}), showing HomeView.');
+            print(
+              'AuthWrapperState: StreamBuilder - User is not null (${user.uid}), showing HomeView.',
+            );
             return HomeView();
           }
         }

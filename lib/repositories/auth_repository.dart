@@ -12,9 +12,13 @@ class AuthRepository {
   AuthRepository(this._firebaseAuthService, this._firestoreService);
 
   // Método para registar utilizador
-  Future<AppUser?> signUpWithEmailAndPassword(String email, String password) async {
+  Future<AppUser?> signUpWithEmailAndPassword(
+    String email,
+    String password,
+  ) async {
     try {
-      User? firebaseUser = await _firebaseAuthService.signUpWithEmailAndPassword(email, password);
+      User? firebaseUser = await _firebaseAuthService
+          .signUpWithEmailAndPassword(email, password);
       return AppUser.fromFirebaseUser(firebaseUser);
     } catch (e) {
       // Tratar ou relançar exceções de forma mais genérica se necessário
@@ -29,18 +33,12 @@ class AuthRepository {
       // Obter o token FCM do dispositivo
       String? fcmToken = await FirebaseMessaging.instance.getToken();
 
-      if (fcmToken != null) {
-        print('AuthRepository: Updating FCM token for user $userId: $fcmToken');
-        // Atualizar o documento do utilizador na coleção 'users' com o token
-        await _firestoreService.updateDocument(
-          _usersCollection,
-          userId,
-          {'fcmToken': fcmToken},
-        );
-        print('AuthRepository: FCM token updated successfully.');
-      } else {
-        print('AuthRepository: FCM token is null, cannot update.');
-      }
+      print('AuthRepository: Updating FCM token for user $userId: $fcmToken');
+      // Atualizar o documento do utilizador na coleção 'users' com o token
+      await _firestoreService.updateDocument(_usersCollection, userId, {
+        'fcmToken': fcmToken,
+      });
+      print('AuthRepository: FCM token updated successfully.');
     } catch (e) {
       print('AuthRepository: Error updating FCM token: $e');
       // Pode decidir não relançar este erro se a atualização do token não for crítica para o login
@@ -61,15 +59,20 @@ class AuthRepository {
   }
 
   // Método para fazer login
-  Future<AppUser?> signInWithEmailAndPassword(String email, String password) async {
+  Future<AppUser?> signInWithEmailAndPassword(
+    String email,
+    String password,
+  ) async {
     try {
-      User? firebaseUser = await _firebaseAuthService.signInWithEmailAndPassword(email, password);
+      User? firebaseUser = await _firebaseAuthService
+          .signInWithEmailAndPassword(email, password);
       AppUser? appUser = AppUser.fromFirebaseUser(firebaseUser);
     } catch (e) {
       // Tratar ou relançar exceções de forma mais genérica se necessário
       print('Error during sign in: $e');
       rethrow;
     }
+    return null;
   }
 
   // Método para fazer logout

@@ -26,7 +26,9 @@ class CartViewModel with ChangeNotifier {
 
   // Adiciona um item ao carrinho ou aumenta a quantidade se já existir
   void addItem(MenuItem menuItem) {
-    int existingIndex = _items.indexWhere((item) => item.menuItem.id == menuItem.id);
+    int existingIndex = _items.indexWhere(
+      (item) => item.menuItem.id == menuItem.id,
+    );
 
     if (existingIndex != -1) {
       _items[existingIndex].quantity++;
@@ -38,13 +40,17 @@ class CartViewModel with ChangeNotifier {
 
   // Remove um item do carrinho ou diminui a quantidade
   void removeItem(MenuItem menuItem) {
-    int existingIndex = _items.indexWhere((item) => item.menuItem.id == menuItem.id);
+    int existingIndex = _items.indexWhere(
+      (item) => item.menuItem.id == menuItem.id,
+    );
 
     if (existingIndex != -1) {
       if (_items[existingIndex].quantity > 1) {
         _items[existingIndex].quantity--;
       } else {
-        _items.removeAt(existingIndex); // Remove completamente se a quantidade for 1
+        _items.removeAt(
+          existingIndex,
+        ); // Remove completamente se a quantidade for 1
       }
       notifyListeners();
     }
@@ -55,7 +61,6 @@ class CartViewModel with ChangeNotifier {
     _items.removeWhere((item) => item.menuItem.id == menuItem.id);
     notifyListeners();
   }
-
 
   // Limpa o carrinho
   void clearCart() {
@@ -105,7 +110,8 @@ class CartViewModel with ChangeNotifier {
       return true; // Encomenda submetida com sucesso
     } catch (e) {
       _isPlacingOrder = false;
-      _orderErrorMessage = "Erro ao submeter a encomenda: $e"; // Mensagem de erro
+      _orderErrorMessage =
+          "Erro ao submeter a encomenda: $e"; // Mensagem de erro
       notifyListeners();
       return false; // Falha ao submeter a encomenda
     }

@@ -27,7 +27,8 @@ class ExternalMenuViewModel with ChangeNotifier {
       notifyListeners();
     } catch (e) {
       _isLoading = false;
-      _errorMessage = 'Erro ao carregar os cardápios externos.'; // Mensagem de erro genérica
+      _errorMessage =
+          'Erro ao carregar os cardápios externos.'; // Mensagem de erro genérica
       notifyListeners();
     }
   }

@@ -42,7 +42,8 @@ class _SignupViewState extends State<SignupView> {
               obscureText: true,
             ),
             SizedBox(height: 20),
-            if (signupViewModel.isLoading) // Mostra indicador de loading se estiver a carregar
+            if (signupViewModel
+                .isLoading) // Mostra indicador de loading se estiver a carregar
               CircularProgressIndicator()
             else
               ElevatedButton(
@@ -55,7 +56,8 @@ class _SignupViewState extends State<SignupView> {
                   if (success) {
                     // Se o registo for bem-sucedido, pode navegar para o Login
                     print('Registo Successful!');
-                    Navigator.pushReplacement( // Substitui a tela atual pela de Login
+                    Navigator.pushReplacement(
+                      // Substitui a tela atual pela de Login
                       context,
                       MaterialPageRoute(builder: (context) => LoginView()),
                     );
@@ -80,7 +82,8 @@ class _SignupViewState extends State<SignupView> {
             TextButton(
               onPressed: () {
                 // Navegar para a tela de Login
-                Navigator.pushReplacement( // Substitui a tela atual pela de Login
+                Navigator.pushReplacement(
+                  // Substitui a tela atual pela de Login
                   context,
                   MaterialPageRoute(builder: (context) => LoginView()),
                 );

@@ -27,7 +27,8 @@ class CanteenMenuViewModel with ChangeNotifier {
       notifyListeners();
     } catch (e) {
       _isLoading = false;
-      _errorMessage = 'Erro ao carregar o cardápio da cantina.'; // Mensagem de erro genérica
+      _errorMessage =
+          'Erro ao carregar o cardápio da cantina.'; // Mensagem de erro genérica
       notifyListeners();
     }
   }

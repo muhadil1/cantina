@@ -7,7 +7,8 @@ class Order {
   final List<CartItem> items;
   final double totalAmount;
   final Timestamp timestamp;
-  String status; // Ex: 'Pending', 'Processing', 'Ready', 'Delivered', 'Cancelled'
+  String
+  status; // Ex: 'Pending', 'Processing', 'Ready', 'Delivered', 'Cancelled'
 
   Order({
     this.id,
@@ -35,9 +36,12 @@ class Order {
     return Order(
       id: doc.id,
       userId: data['userId'] ?? '',
-      items: (data['items'] as List<dynamic>?)
-          ?.map((itemMap) => CartItem.fromMap(itemMap as Map<String, dynamic>))
-          .toList() ??
+      items:
+          (data['items'] as List<dynamic>?)
+              ?.map(
+                (itemMap) => CartItem.fromMap(itemMap as Map<String, dynamic>),
+              )
+              .toList() ??
           [],
       totalAmount: (data['totalAmount'] ?? 0.0).toDouble(),
       timestamp: data['timestamp'] ?? Timestamp.now(),

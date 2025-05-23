@@ -4,7 +4,8 @@ import '../services/firestore_service.dart';
 
 class OrderRepository {
   final FirestoreService _firestoreService;
-  final String _ordersCollection = 'orders'; // Coleção para armazenar encomendas
+  final String _ordersCollection =
+      'orders'; // Coleção para armazenar encomendas
 
   OrderRepository(this._firestoreService);
 
@@ -22,12 +23,16 @@ class OrderRepository {
   // Método para obter o histórico de encomendas de um utilizador (opcional para este passo)
   Future<List<pedido.Order>> getUserOrders(String userId) async {
     try {
-      QuerySnapshot snapshot = await FirebaseFirestore.instance // Usando instância direta para query complexa
-          .collection(_ordersCollection)
-          .where('userId', isEqualTo: userId)
-          .orderBy('timestamp', descending: true) // Ordenar por data
-          .get();
-      return snapshot.docs.map((doc) => pedido.Order.fromFirestore(doc)).toList();
+      QuerySnapshot snapshot =
+          await FirebaseFirestore
+              .instance // Usando instância direta para query complexa
+              .collection(_ordersCollection)
+              .where('userId', isEqualTo: userId)
+              .orderBy('timestamp', descending: true) // Ordenar por data
+              .get();
+      return snapshot.docs
+          .map((doc) => pedido.Order.fromFirestore(doc))
+          .toList();
     } catch (e) {
       print('Error fetching user orders: $e');
       rethrow;

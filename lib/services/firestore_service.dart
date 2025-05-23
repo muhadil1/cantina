@@ -9,17 +9,27 @@ class FirestoreService {
   }
 
   // Método genérico para obter um documento específico de uma coleção
-  Future<DocumentSnapshot> getDocument(String collectionPath, String documentId) {
+  Future<DocumentSnapshot> getDocument(
+    String collectionPath,
+    String documentId,
+  ) {
     return _firestore.collection(collectionPath).doc(documentId).get();
   }
 
   // Método genérico para adicionar um documento a uma coleção
-  Future<DocumentReference> addDocument(String collectionPath, Map<String, dynamic> data) {
+  Future<DocumentReference> addDocument(
+    String collectionPath,
+    Map<String, dynamic> data,
+  ) {
     return _firestore.collection(collectionPath).add(data);
   }
 
   // Método genérico para atualizar um documento específico
-  Future<void> updateDocument(String collectionPath, String documentId, Map<String, dynamic> data) {
+  Future<void> updateDocument(
+    String collectionPath,
+    String documentId,
+    Map<String, dynamic> data,
+  ) {
     return _firestore.collection(collectionPath).doc(documentId).update(data);
   }
 
@@ -28,5 +38,5 @@ class FirestoreService {
     return _firestore.collection(collectionPath).doc(documentId).delete();
   }
 
-// Você pode adicionar outros métodos específicos para queries mais complexas
+  // Você pode adicionar outros métodos específicos para queries mais complexas
 }
