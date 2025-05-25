@@ -26,14 +26,13 @@ class LoginViewModel with ChangeNotifier {
       return true; // Login bem-sucedido
     } catch (e) {
       _isLoading = false;
-      _errorMessage = "Erro ao fazer login. Verifique email/password."; // Mensagem de erro genérica ou tratar e
+      _errorMessage =
+          "Erro ao fazer login. Verifique email/password."; // Mensagem de erro genérica ou tratar e
       // adaptar a mensagem com base na exceção 'e'
       notifyListeners(); // Notifica a View que o estado de loading e erro mudaram
       return false; // Login falhou
     }
-
-
   }
 
-// Você pode adicionar um método semelhante para sign up aqui ou em um ViewModel separado
+  // Você pode adicionar um método semelhante para sign up aqui ou em um ViewModel separado
 }

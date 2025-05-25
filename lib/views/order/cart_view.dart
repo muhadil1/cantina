@@ -1,100 +1,127 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../../repositories/auth_repository.dart';
 import '../../viewmodels/order/cart_viewmodel.dart';
 import '../../models/cart_item.dart';
+import '../auth/login_view.dart'; // Import the LoginView
 
 class CartView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    // Acessa o CartViewModel
     final cartViewModel = Provider.of<CartViewModel>(context);
+    final authRepository = Provider.of<AuthRepository>(context, listen: false);
 
     return Scaffold(
-      appBar: AppBar(title: Text('Meu Carrinho')),
-      body: Column(
-        children: [
-          // Lista de Itens no Carrinho
-          Expanded(
-            child:
-                cartViewModel.items.isEmpty
-                    ? Center(child: Text('O carrinho está vazio.'))
-                    : ListView.builder(
-                      itemCount: cartViewModel.items.length,
-                      itemBuilder: (context, index) {
-                        final cartItem = cartViewModel.items[index];
-                        return CartItemTile(
-                          cartItem: cartItem,
-                        ); // Widget separado para o item
-                      },
-                    ),
-          ),
-
-          // Resumo do Carrinho e Botão de Encomendar
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Text(
-                  'Total: ${cartViewModel.totalAmount.toStringAsFixed(2)} MZN',
-                  textAlign: TextAlign.right,
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-                SizedBox(height: 20),
-                if (cartViewModel.isPlacingOrder)
-                  Center(child: CircularProgressIndicator())
-                else
-                  ElevatedButton(
-                    onPressed:
-                        cartViewModel
-                                .items
-                                .isEmpty // Desabilita se o carrinho estiver vazio
-                            ? null
-                            : () async {
-                              bool success = await cartViewModel.placeOrder();
-                              if (success) {
-                                // Mostrar mensagem de sucesso e talvez navegar para histórico de encomendas
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text(
-                                      'Encomenda submetida com sucesso!',
-                                    ),
-                                  ),
-                                );
-                                // Opcional: Navegar para tela de histórico de encomendas
-                              } else {
-                                // Mostrar mensagem de erro (geralmente já tratada no ViewModel)
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text(
-                                      cartViewModel.orderErrorMessage ??
-                                          'Erro desconhecido ao encomendar.',
-                                    ),
-                                  ),
-                                );
-                              }
-                            },
-                    child: Text('Efetuar Encomenda'),
-                  ),
-                if (cartViewModel.orderErrorMessage != null)
-                  Padding(
-                    padding: const EdgeInsets.only(top: 10.0),
-                    child: Text(
-                      cartViewModel.orderErrorMessage!,
-                      style: TextStyle(color: Colors.red),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-              ],
-            ),
+      appBar: AppBar(
+        title: Text('Meu Carrinho'),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.logout),
+            onPressed: () async {
+              await authRepository.signOut();
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => LoginView(),
+                ), // Navigate to LoginView
+              );
+            },
           ),
         ],
+      ),
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Colors.lightBlue[50]!, Colors.white],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+        ),
+        child: Column(
+          children: [
+            Expanded(
+              child:
+                  cartViewModel.items.isEmpty
+                      ? Center(child: Text('O carrinho está vazio.'))
+                      : ListView.builder(
+                        itemCount: cartViewModel.items.length,
+                        itemBuilder: (context, index) {
+                          final cartItem = cartViewModel.items[index];
+                          return CartItemTile(cartItem: cartItem);
+                        },
+                      ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Text(
+                    'Total: ${cartViewModel.totalAmount.toStringAsFixed(2)} MZN',
+                    textAlign: TextAlign.right,
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(height: 20),
+                  if (cartViewModel.isPlacingOrder)
+                    Center(child: CircularProgressIndicator())
+                  else
+                    ElevatedButton(
+                      onPressed:
+                          cartViewModel.items.isEmpty
+                              ? null
+                              : () async {
+                                bool success = await cartViewModel.placeOrder();
+                                if (success) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text(
+                                        'Encomenda submetida com sucesso!',
+                                      ),
+                                    ),
+                                  );
+                                } else {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text(
+                                        cartViewModel.orderErrorMessage ??
+                                            'Erro desconhecido ao encomendar.',
+                                      ),
+                                    ),
+                                  );
+                                }
+                              },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.teal,
+                        padding: EdgeInsets.symmetric(vertical: 15),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                      ),
+                      child: Text(
+                        'Efetuar Encomenda',
+                        style: TextStyle(fontSize: 16),
+                      ),
+                    ),
+                  if (cartViewModel.orderErrorMessage != null)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 10.0),
+                      child: Text(
+                        cartViewModel.orderErrorMessage!,
+                        style: TextStyle(color: Colors.red),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
 }
 
-// Widget separado para exibir um item no carrinho
+// Widget to display each item in the cart
 class CartItemTile extends StatelessWidget {
   final CartItem cartItem;
 
@@ -102,33 +129,24 @@ class CartItemTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Acessa o CartViewModel para chamar os métodos de modificação (listen: false)
     final cartViewModel = Provider.of<CartViewModel>(context, listen: false);
 
     return Card(
-      // Usar um Card para cada item do carrinho
-      elevation: 1.5, // Sombra mais suave
+      elevation: 4.0, // Increased shadow for a modern look
       margin: EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
       child: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(12.0),
         child: Row(
-          // Organizar imagem e detalhes/controles horizontalmente
-          crossAxisAlignment:
-              CrossAxisAlignment
-                  .center, // Centralizar verticalmente os elementos da Row
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            // Imagem do Item
             ClipRRect(
-              borderRadius: BorderRadius.circular(
-                4.0,
-              ), // Bordas menos arredondadas que nos cardápios
+              borderRadius: BorderRadius.circular(8.0),
               child: Image.network(
-                cartItem
-                    .imageUrl, // Acessa o URL da imagem através do getter no CartItem
-                width: 70, // Tamanho um pouco menor que nos cardápios
+                cartItem.imageUrl,
+                width: 70,
                 height: 70,
                 fit: BoxFit.cover,
-                // Tratamento de erro e placeholder para imagem inválida
                 errorBuilder: (context, error, stackTrace) {
                   return Container(
                     width: 70,
@@ -137,7 +155,6 @@ class CartItemTile extends StatelessWidget {
                     child: Icon(Icons.broken_image, color: Colors.grey[600]),
                   );
                 },
-                // Opcional: loadingBuilder
                 loadingBuilder: (context, child, loadingProgress) {
                   if (loadingProgress == null) return child;
                   return Container(
@@ -155,80 +172,61 @@ class CartItemTile extends StatelessWidget {
                 },
               ),
             ),
-            SizedBox(width: 12.0), // Espaço entre imagem e detalhes
-            // Detalhes do Item (Nome, Preço Unitário, Preço Total do Item)
+            SizedBox(width: 12.0),
             Expanded(
-              // Ocupa o espaço restante
               child: Column(
-                // Empilha nome, preços
-                crossAxisAlignment:
-                    CrossAxisAlignment.start, // Alinha texto à esquerda
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    cartItem
-                        .name, // Acessa o nome através do getter no CartItem
+                    cartItem.name,
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
                   SizedBox(height: 4.0),
                   Text(
-                    'Unitário: ${cartItem.price.toStringAsFixed(2)} MZN', // Acessa o preço unitário
+                    'Unitário: ${cartItem.price.toStringAsFixed(2)} MZN',
                     style: TextStyle(fontSize: 13, color: Colors.grey[600]),
                   ),
                   SizedBox(height: 4.0),
                   Text(
-                    'Total: ${cartItem.totalPrice.toStringAsFixed(2)} MZN', // Mostra o preço total deste item (quantidade * preço)
+                    'Total: ${cartItem.totalPrice.toStringAsFixed(2)} MZN',
                     style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
                   ),
                 ],
               ),
             ),
-
-            // Controles de Quantidade e Remover
             Row(
-              // Usar uma Row para agrupar os botões e a quantidade
-              mainAxisSize:
-                  MainAxisSize
-                      .min, // Ocupa o mínimo de espaço horizontal necessário
+              mainAxisSize: MainAxisSize.min,
               children: [
-                IconButton(
-                  icon: Icon(
-                    Icons.remove_circle_outline,
-                    size: 20,
-                  ), // Ícone de remover (menos)
-                  onPressed: () {
-                    cartViewModel.removeItem(
-                      cartItem.menuItem,
-                    ); // Remover 1 unidade
+                GestureDetector(
+                  onTap: () {
+                    cartViewModel.removeItem(cartItem.menuItem);
                   },
+                  child: Icon(Icons.remove_circle_outline, size: 24),
                 ),
+                SizedBox(width: 8.0),
                 Text(
-                  '${cartItem.quantity}', // Exibe a quantidade
+                  '${cartItem.quantity}',
                   style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
                 ),
-                IconButton(
-                  icon: Icon(
-                    Icons.add_circle_outline,
-                    size: 20,
-                  ), // Ícone de adicionar (mais)
-                  onPressed: () {
-                    cartViewModel.addItem(
-                      cartItem.menuItem,
-                    ); // Adicionar 1 unidade
+                SizedBox(width: 8.0),
+                GestureDetector(
+                  onTap: () {
+                    cartViewModel.addItem(cartItem.menuItem);
                   },
+                  child: Icon(Icons.add_circle_outline, size: 24),
                 ),
-                IconButton(
-                  icon: Icon(
-                    Icons.delete_outline,
-                    size: 20,
-                    color: Colors.red[600],
-                  ), // Ícone de remover completamente
-                  onPressed: () {
-                    cartViewModel.removeAllOfItem(
-                      cartItem.menuItem,
-                    ); // Remover todos do item
+                SizedBox(width: 8.0),
+                GestureDetector(
+                  onTap: () {
+                    cartViewModel.removeAllOfItem(cartItem.menuItem);
                   },
+                  child: Icon(
+                    Icons.delete_outline,
+                    size: 24,
+                    color: Colors.red[600],
+                  ),
                 ),
               ],
             ),
