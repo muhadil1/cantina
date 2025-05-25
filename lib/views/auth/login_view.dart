@@ -98,8 +98,18 @@ class _LoginViewState extends State<LoginView> with TickerProviderStateMixin {
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(12),
+                          child: Image.asset(
+                            'assets/food.png',
+                            height: 130,
+                            width: 130,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                        SizedBox(height: 16),
                         Text(
-                          'Bem-vindo',
+                          'BEM-VINDO',
                           style: TextStyle(
                             fontSize: 28,
                             fontWeight: FontWeight.bold,
@@ -107,17 +117,36 @@ class _LoginViewState extends State<LoginView> with TickerProviderStateMixin {
                           ),
                         ),
                         SizedBox(height: 20),
+
+                        // EMAIL
                         TextField(
                           controller: _emailController,
-                          decoration: InputDecoration(labelText: 'Email'),
+                          decoration: InputDecoration(
+                            labelText: 'Email',
+                            prefixIcon: Icon(Icons.email),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
                           keyboardType: TextInputType.emailAddress,
                         ),
+                        SizedBox(height: 16),
+
+                        // SENHA
                         TextField(
                           controller: _passwordController,
-                          decoration: InputDecoration(labelText: 'Senha'),
+                          decoration: InputDecoration(
+                            labelText: 'Senha',
+                            prefixIcon: Icon(Icons.lock),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
                           obscureText: true,
                         ),
                         SizedBox(height: 20),
+
+                        // BOTÃO DE ENTRAR
                         if (loginViewModel.isLoading)
                           CircularProgressIndicator()
                         else
@@ -140,7 +169,7 @@ class _LoginViewState extends State<LoginView> with TickerProviderStateMixin {
                               );
                               if (success) {
                                 print('Login Successful!');
-                                // TODO: Implementar navegação
+                                // TODO: Navegar para tela principal
                               } else {
                                 print(
                                   'Login Failed: ${loginViewModel.errorMessage}',
@@ -154,6 +183,7 @@ class _LoginViewState extends State<LoginView> with TickerProviderStateMixin {
                             },
                             child: Text('Entrar'),
                           ),
+
                         if (loginViewModel.errorMessage != null)
                           Padding(
                             padding: const EdgeInsets.only(top: 10.0),
@@ -162,6 +192,8 @@ class _LoginViewState extends State<LoginView> with TickerProviderStateMixin {
                               style: TextStyle(color: Colors.red),
                             ),
                           ),
+
+                        // LINK PARA REGISTO
                         TextButton(
                           onPressed: () {
                             Navigator.pushReplacement(
