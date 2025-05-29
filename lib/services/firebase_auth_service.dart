@@ -12,18 +12,19 @@ class FirebaseAuthService {
       UserCredential credential = await _firebaseAuth
           .createUserWithEmailAndPassword(email: email, password: password);
       return credential.user;
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'weak-password') {
+    } on FirebaseAuthException {
+      /*if (e.code == 'weak-password') {
         print('The password provided is too weak.');
       } else if (e.code == 'email-already-in-use') {
         print('The account already exists for that email.');
       }
       // Relançar a exceção para ser tratada pelo Repositório/ViewModel
-      rethrow;
+      rethrow;*/
     } catch (e) {
-      print(e.toString());
-      rethrow;
+      /*print(e.toString());
+      rethrow;*/
     }
+    return null;
   }
 
   // Método para fazer login com email e password

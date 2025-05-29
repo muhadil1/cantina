@@ -2,11 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../repositories/auth_repository.dart';
 import '../../viewmodels/order/cart_viewmodel.dart';
+import '../auth/login_view.dart';
 import '../menu/cantina_menu_view.dart';
 import '../menu/externo_menu_view.dart';
 import '../order/cart_view.dart';
 
 class HomeView extends StatelessWidget {
+  const HomeView({super.key});
+
   @override
   Widget build(BuildContext context) {
     print('HomeView: Build method called.');
@@ -56,7 +59,15 @@ class HomeView extends StatelessWidget {
               IconButton(
                 icon: Icon(Icons.logout),
                 onPressed: () async {
+                  print('Logout button pressed. Attempting sign out.');
                   await authRepository.signOut();
+                  print('Sign out completed. Navigating to LoginView.');
+                  // >>> ADICIONAR ESTA NAVEGAÇÃO <<<
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => LoginView()),
+                  );
+                  // <<< FIM DA NAVEGAÇÃO >>>
                 },
               ),
             ],

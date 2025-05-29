@@ -8,18 +8,30 @@ class SignupViewModel with ChangeNotifier {
 
   bool _isLoading = false;
   String? _errorMessage;
+  String? _passwordMismatchError;
 
   bool get isLoading => _isLoading;
   String? get errorMessage => _errorMessage;
+  String? get passwordMismatchError => _passwordMismatchError;
 
   // Método para registar novo utilizador
-  Future<bool> signUp({required String email, required String password}) async {
+  Future<bool> signUp({required String email, required String password, required String confirmPassword,
+    required String apelido,}) async {
     _isLoading = true;
     _errorMessage = null;
     notifyListeners(); // Notifica a View que o estado de loading mudou
 
+    // >>> VALIDAÇÃO DA SENHA AQUI <<<
+    if (password != confirmPassword) {
+      _isLoading = false;
+      _passwordMismatchError = "As senhas não coincidem."; // Definir mensagem de erro
+      notifyListeners();
+      return false;
+    }
+    // <<< FIM DA VALIDAÇÃO >>>
+
     try {
-      await _authRepository.signUpWithEmailAndPassword(email, password);
+      await _authRepository.signUpWithEmailAndPassword(email, password, apelido);
       _isLoading = false;
       notifyListeners(); // Notifica sucesso
       return true; // Registo bem-sucedido

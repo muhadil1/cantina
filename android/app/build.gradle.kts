@@ -19,7 +19,7 @@ android {
     }
 
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_11.toString()
+        jvmTarget = "1.8" // Definir para 11
     }
 
     defaultConfig {
@@ -31,6 +31,19 @@ android {
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+    }
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
+        isCoreLibraryDesugaringEnabled = true
+    }
+
+    dependencies {
+        // ... tuas outras dependências
+
+        coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.4")
+
     }
 
     buildTypes {

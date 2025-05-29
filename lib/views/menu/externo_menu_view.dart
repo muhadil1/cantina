@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../repositories/auth_repository.dart';
 import '../../viewmodels/menu/externo_menu_viewmodel.dart';
-import '../../models/menu_item.dart';
 import '../../viewmodels/order/cart_viewmodel.dart';
 import '../order/cart_view.dart'; // Ensure CartView is imported
 import '../auth/login_view.dart'; // Import the login view
 
 class ExternalMenuView extends StatefulWidget {
+  const ExternalMenuView({super.key});
+
   @override
   _ExternalViewState createState() => _ExternalViewState();
 }
@@ -154,8 +155,9 @@ class _ExternalViewState extends State<ExternalMenuView> {
                                         child,
                                         loadingProgress,
                                       ) {
-                                        if (loadingProgress == null)
+                                        if (loadingProgress == null) {
                                           return child;
+                                        }
                                         return Container(
                                           width: 100,
                                           height: 100,

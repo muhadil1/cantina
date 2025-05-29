@@ -11,7 +11,7 @@ class CartViewModel with ChangeNotifier {
 
   CartViewModel(this._orderRepository);
 
-  List<CartItem> _items = [];
+  final List<CartItem> _items = [];
   bool _isPlacingOrder = false;
   String? _orderErrorMessage;
 

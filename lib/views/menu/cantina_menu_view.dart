@@ -7,6 +7,8 @@ import '../order/cart_view.dart'; // Ensure you import the CartView
 import '../auth/login_view.dart'; // Import the LoginView
 
 class CanteenMenuView extends StatefulWidget {
+  const CanteenMenuView({super.key});
+
   @override
   _CanteenViewState createState() => _CanteenViewState();
 }
@@ -156,8 +158,9 @@ class _CanteenViewState extends State<CanteenMenuView> {
                                         child,
                                         loadingProgress,
                                       ) {
-                                        if (loadingProgress == null)
+                                        if (loadingProgress == null) {
                                           return child;
+                                        }
                                         return Container(
                                           width: 100,
                                           height: 100,

@@ -24,6 +24,16 @@ class FirestoreService {
     return _firestore.collection(collectionPath).add(data);
   }
 
+  // Método genérico para criar ou substituir um documento com um ID específico
+  Future<void> setDocument(
+      String collectionPath,
+      String documentId,
+      Map<String, dynamic> data,
+      ) {
+    return _firestore.collection(collectionPath).doc(documentId).set(data);
+  }
+
+
   // Método genérico para atualizar um documento específico
   Future<void> updateDocument(
     String collectionPath,

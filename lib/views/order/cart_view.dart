@@ -6,6 +6,8 @@ import '../../models/cart_item.dart';
 import '../auth/login_view.dart'; // Import the LoginView
 
 class CartView extends StatelessWidget {
+  const CartView({super.key});
+
   @override
   Widget build(BuildContext context) {
     final cartViewModel = Provider.of<CartViewModel>(context);
@@ -125,7 +127,7 @@ class CartView extends StatelessWidget {
 class CartItemTile extends StatelessWidget {
   final CartItem cartItem;
 
-  const CartItemTile({Key? key, required this.cartItem}) : super(key: key);
+  const CartItemTile({super.key, required this.cartItem});
 
   @override
   Widget build(BuildContext context) {

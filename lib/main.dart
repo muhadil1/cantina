@@ -3,6 +3,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import 'firebase_options.dart';
 import 'services/firebase_auth_service.dart';
@@ -15,7 +16,17 @@ import 'viewmodels/auth/signup_viewmodel.dart';
 import 'viewmodels/menu/cantina_menu_viewmodel.dart';
 import 'viewmodels/menu/externo_menu_viewmodel.dart';
 import 'viewmodels/order/cart_viewmodel.dart'; // Importar CartViewModel
-import 'widgets/auth_wrapper.dart';
+
+import 'views/auth/login_view.dart';
+import 'views/home/home_view.dart';
+
+// Handler de background para FCM (manter esta função de nível superior)
+@pragma('vm:entry-point')
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  print('Handling a background message: ${message.messageId}');
+  // TODO: Lógica de manuseio em segundo plano
+}
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -33,6 +44,8 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -46,10 +59,7 @@ class MyApp extends StatelessWidget {
           create:
               (context) => AuthRepository(
                 Provider.of<FirebaseAuthService>(context, listen: false),
-                Provider.of<FirestoreService>(
-                  context,
-                  listen: false,
-                ), // Injete o FirestoreService
+                Provider.of<FirestoreService>(context, listen: false,), // Injete o FirestoreService
               ),
         ),
         Provider<MenuRepository>(
@@ -114,7 +124,28 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Cantina ISUTC',
         theme: ThemeData(primarySwatch: Colors.blue),
-        home: AuthWrapper(),
+        // >>> MODIFICAÇÃO AQUI <<<
+        // Usa um FutureBuilder para verificar o estado inicial de autenticação
+        home: FutureBuilder<User?>(
+          // Verifica o estado atual do utilizador no Firebase Auth
+          future: FirebaseAuth.instance.authStateChanges().first, // Pega o primeiro estado emitido
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              // Mostra um loading enquanto espera pelo estado inicial
+              return const Scaffold(body: Center(child: CircularProgressIndicator()));
+            } else {
+              final User? user = snapshot.data;
+              if (user == null) {
+                // Se não há utilizador autenticado, mostra a tela de Login
+                return LoginView();
+              } else {
+                // Se há um utilizador autenticado, mostra a tela Home
+                return HomeView();
+              }
+            }
+          },
+        ),
+        // <<< FIM DA MODIFICAÇÃO >>>
         debugShowCheckedModeBanner: false, // Remove o banner de debug
       ),
     );

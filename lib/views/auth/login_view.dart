@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../viewmodels/auth/login_viewmodel.dart';
 import 'package:cantina/views/auth/signup_view.dart';
+import '../../../views/home/home_view.dart';
 
 class LoginView extends StatefulWidget {
+  const LoginView({super.key});
+
   @override
   _LoginViewState createState() => _LoginViewState();
 }
@@ -169,7 +172,12 @@ class _LoginViewState extends State<LoginView> with TickerProviderStateMixin {
                               );
                               if (success) {
                                 print('Login Successful!');
-                                // TODO: Navegar para tela principal
+                                // >>> ADICIONAR ESTA NAVEGAÇÃO <<<
+                                Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => HomeView()),
+                                );
+                                // <<< FIM DA NAVEGAÇÃO >>>
                               } else {
                                 print(
                                   'Login Failed: ${loginViewModel.errorMessage}',

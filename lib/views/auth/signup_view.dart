@@ -5,6 +5,8 @@ import '../../viewmodels/auth/signup_viewmodel.dart';
 import 'login_view.dart';
 
 class SignupView extends StatefulWidget {
+  const SignupView({super.key});
+
   @override
   _SignupViewState createState() => _SignupViewState();
 }
@@ -14,8 +16,7 @@ class _SignupViewState extends State<SignupView> {
   final TextEditingController _apelidoController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController =
-      TextEditingController();
+  final TextEditingController _confirmPasswordController = TextEditingController();
 
   @override
   void dispose() {
@@ -163,6 +164,17 @@ class _SignupViewState extends State<SignupView> {
                       ),
                       obscureText: true,
                     ),
+
+                    // >>> Adicionar esta parte para exibir o erro de senha <<<
+                    if (signupViewModel.passwordMismatchError != null)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 8.0),
+                        child: Text(
+                          signupViewModel.passwordMismatchError!,
+                          style: TextStyle(color: Colors.red),
+                        ),
+                      ),
+                    // <<< Fim da adição >>>
                     const SizedBox(height: 20),
 
                     // Botão Registar
@@ -194,14 +206,16 @@ class _SignupViewState extends State<SignupView> {
                             bool success = await signupViewModel.signUp(
                               email: _emailController.text,
                               password: _passwordController.text,
+                              confirmPassword: _confirmPasswordController.text, // <<< Passar este
+                              apelido: _apelidoController.text, // <<< Passar este para apelido
                             );
                             if (success) {
-                              Navigator.pushReplacement(
+                              // >>> ADICIONAR ESTA NAVEGAÇÃO <<<
+                              Navigator.pushReplacement( // Navega para a tela de Login após o registo
                                 context,
-                                MaterialPageRoute(
-                                  builder: (context) => LoginView(),
-                                ),
+                                MaterialPageRoute(builder: (context) => LoginView()),
                               );
+                              // <<< FIM DA NAVEGAÇÃO >>>
                             } else {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
