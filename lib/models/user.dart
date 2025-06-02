@@ -4,42 +4,44 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class AppUser {
   final String? uid;
-  final String? email;
-  final String? role;
-  final String? apelido; // <<< Adicionar este campo
+  final String email;
+  final String apelido;
+  final String role; // Campo crítico
+  final String? establishmentId;
+  final String? fcmToken;
+  final Timestamp? createdAt;
 
-  AppUser({this.uid, this.email, this.role, this.apelido});
+  AppUser({
+    this.uid,
+    required this.email,
+    required this.apelido,
+    required this.role, // Garanta que é required
+    this.establishmentId,
+    this.fcmToken,
+    this.createdAt,
+  });
 
   // Factory method para criar um AppUser a partir de um objeto User do Firebase
-  factory AppUser.fromFirebaseUser(User? firebaseUser) {
+  factory AppUser.fromFirebaseUser(User user) {
     return AppUser(
-      uid: firebaseUser?.uid,
-      email: firebaseUser?.email,
-      role: null, // Role é lido do Firestore
-      apelido: null, // Apelido é lido do Firestore
+      uid: user.uid,
+      email: user.email ?? '',
+      apelido: '', // Valor temporário até atualizar no Firestore
+      role: 'customer', // Valor padrão para novos usuários
     );
   }
 
   // Método de fábrica para criar AppUser a partir de DocumentSnapshot do Firestore
   factory AppUser.fromFirestore(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>?;
-    if (data == null) return AppUser();
-
+    Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
     return AppUser(
       uid: doc.id,
-      email: data['email'] as String?,
-      role: data['role'] as String? ?? 'customer',
-      apelido: data['apelido'] as String?, // <<< Ler o campo 'apelido' do Firestore
+      email: data['email'] ?? '',
+      apelido: data['apelido'] ?? '',
+      role: data['role'] ?? 'customer', // Valor padrão se não existir
+      establishmentId: data['establishmentId'],
+      fcmToken: data['fcmToken'],
+      createdAt: data['createdAt'],
     );
-  }
-
-  // Opcional: Adicione um método toMap() se precisar de converter AppUser para Map
-  Map<String, dynamic> toMap() {
-    return {
-      'uid': uid,
-      'email': email,
-      'role': role,
-      'apelido': apelido, // <<< Incluir no toMap
-    };
   }
 }

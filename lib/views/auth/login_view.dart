@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../../../viewmodels/auth/login_viewmodel.dart';
 import 'package:cantina/views/auth/signup_view.dart';
 import '../../../views/home/home_view.dart';
+import '../admin/admin_dashboard_screen.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -171,13 +172,21 @@ class _LoginViewState extends State<LoginView> with TickerProviderStateMixin {
                                 password: _passwordController.text,
                               );
                               if (success) {
-                                print('Login Successful!');
-                                // >>> ADICIONAR ESTA NAVEGAÇÃO <<<
-                                Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(builder: (context) => HomeView()),
-                                );
-                                // <<< FIM DA NAVEGAÇÃO >>>
+                                final user = loginViewModel.currentUser;
+
+                                if (user != null) {
+                                  if (user.role == 'admin') {
+                                    Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(builder: (context) => AdminDashboardScreen()),
+                                    );
+                                  } else {
+                                    Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(builder: (context) => HomeView()),
+                                    );
+                                  }
+                                }
                               } else {
                                 print(
                                   'Login Failed: ${loginViewModel.errorMessage}',

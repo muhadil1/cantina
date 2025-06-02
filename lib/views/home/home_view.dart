@@ -7,8 +7,28 @@ import '../menu/cantina_menu_view.dart';
 import '../menu/externo_menu_view.dart';
 import '../order/cart_view.dart';
 
-class HomeView extends StatelessWidget {
+class HomeView extends StatefulWidget {
   const HomeView({super.key});
+
+  @override
+  _HomeViewState createState() => _HomeViewState();
+}
+
+class _HomeViewState extends State<HomeView> {
+  bool _isHoveredCanteen = false;
+  bool _isHoveredExternal = false;
+  double _opacity = 0.0;
+
+  @override
+  void initState() {
+    super.initState();
+    // Inicia a animação de fade-in
+    Future.delayed(Duration(milliseconds: 100), () {
+      setState(() {
+        _opacity = 1.0;
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -62,12 +82,10 @@ class HomeView extends StatelessWidget {
                   print('Logout button pressed. Attempting sign out.');
                   await authRepository.signOut();
                   print('Sign out completed. Navigating to LoginView.');
-                  // >>> ADICIONAR ESTA NAVEGAÇÃO <<<
                   Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(builder: (context) => LoginView()),
                   );
-                  // <<< FIM DA NAVEGAÇÃO >>>
                 },
               ),
             ],
@@ -90,74 +108,87 @@ class HomeView extends StatelessWidget {
                   ),
                   SizedBox(height: 20),
                   Image.asset(
-                    'assets/food2.png', // Update with your image path
+                    'assets/food2.png',
                     height: 200,
                     fit: BoxFit.cover,
                   ),
                   SizedBox(height: 20),
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => CanteenMenuView(),
+                  AnimatedOpacity(
+                    opacity: _opacity,
+                    duration: Duration(milliseconds: 500),
+                    child: MouseRegion(
+                      onEnter: (_) => setState(() => _isHoveredCanteen = true),
+                      onExit: (_) => setState(() => _isHoveredCanteen = false),
+                      child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => CanteenMenuView(),
+                            ),
+                          );
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.greenAccent,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                          padding: EdgeInsets.symmetric(
+                            vertical: 20,
+                            horizontal: 30,
+                          ),
+                          textStyle: TextStyle(fontSize: 18),
                         ),
-                      );
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.greenAccent, // Button color
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Image.asset('assets/isutc.png', height: 60),
+                            SizedBox(width: 10),
+                            Text('Ver Cardápio da Cantina'),
+                          ],
+                        ),
                       ),
-                      padding: EdgeInsets.symmetric(
-                        vertical: 20,
-                        horizontal: 30,
-                      ), // Increased padding
-                      textStyle: TextStyle(fontSize: 18), // Increased text size
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Image.asset(
-                          'assets/isutc.png', // Update with your new image path
-                          height: 60, // Increased image height
-                        ),
-                        SizedBox(width: 10), // Space between image and text
-                        Text('Ver Cardápio da Cantina'),
-                      ],
                     ),
                   ),
                   SizedBox(height: 10),
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => ExternalMenuView(),
+                  AnimatedOpacity(
+                    opacity: _opacity,
+                    duration: Duration(milliseconds: 500),
+                    child: MouseRegion(
+                      onEnter: (_) => setState(() => _isHoveredExternal = true),
+                      onExit: (_) => setState(() => _isHoveredExternal = false),
+                      child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ExternalMenuView(),
+                            ),
+                          );
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.orangeAccent,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                          padding: EdgeInsets.symmetric(
+                            vertical: 20,
+                            horizontal: 30,
+                          ),
+                          textStyle: TextStyle(fontSize: 18),
                         ),
-                      );
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.orangeAccent, // Button color
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Image.asset(
+                              'assets/estabelecimentos.png',
+                              height: 60,
+                            ),
+                            SizedBox(width: 10),
+                            Text('Ver Cardápios Externos'),
+                          ],
+                        ),
                       ),
-                      padding: EdgeInsets.symmetric(
-                        vertical: 20,
-                        horizontal: 30,
-                      ), // Increased padding
-                      textStyle: TextStyle(fontSize: 18), // Increased text size
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Image.asset(
-                          'assets/estabelecimentos.png', // Update with the other image path for external
-                          height: 60, // Increased image height
-                        ),
-                        SizedBox(width: 10), // Space between image and text
-                        Text('Ver Cardápios Externos'),
-                      ],
                     ),
                   ),
                 ],
